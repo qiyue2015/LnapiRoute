@@ -1,0 +1,20 @@
+{
+    "name": "lanniu/lnapi-route",
+    "authors": [
+        {
+            "name": "fengqiyue",
+            "email": "fengqiyue@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "LnapiRoute\\": "src/"
+        },
+        "files": [
+            "src/functions.php"
+        ]
+    },
+    "require": {
+        "nikic/fast-route": "^1.3"
+    }
+}
