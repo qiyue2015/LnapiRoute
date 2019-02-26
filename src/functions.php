@@ -49,7 +49,11 @@ function Routing($routeDefinitionCallback, array $options = [])
             // Grab the controller name and method call
             $segments = explode('@', $last);
 
-            $filePath = str_replace("\\", '/', dirname(dirname(__FILE__)));
+            if ($options['API_PATH']) {
+                $filePath = $options['API_PATH'];
+            } else {
+                $filePath = str_replace("\\", '/', dirname(dirname(__FILE__)));
+            }
             $fileName = $filePath . '/api/' . $parts[0] . '/' . $segments[0] . '.php';
             if (!file_exists($fileName)) {
                 send_error(404, 'Not Found 没找到对应的方法文件：' . $segments[0]);
