@@ -84,7 +84,7 @@ function send_error($number, $msg)
     $obj = array();
     $obj['err_code'] = intval($number);
     $obj['err_msg'] = $msg;
-    header('Content - type: application / json');
+    header('Content-type: application/json');
     $obj = json_encode($obj, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
     if ($_GPC['jsonpCallback']) {
         $obj = $_GPC['jsonpCallback'] . '(' . $obj . ')';
@@ -99,7 +99,7 @@ function send_result($data = array())
     $obj['err_code'] = 0;
     $obj['err_msg'] = 'success';
     $obj['data'] = $data ? $data : (Object)array();
-    header('Content - type: application / json');
+    header('Content-type: application/json');
     $obj = json_encode($obj, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
     if ($_GPC['jsonpCallback']) {
         $obj = $_GPC['jsonpCallback'] . '(' . $obj . ')';
