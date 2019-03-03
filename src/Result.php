@@ -16,7 +16,7 @@ class Result
      * @param $number
      * @param $msg
      */
-    public function send_error($number, $msg)
+    static function send_error($number, $msg)
     {
         $obj = array();
         $obj['err_code'] = intval($number);
@@ -33,7 +33,7 @@ class Result
      * 输出正确信息
      * @param array $data
      */
-    public function send_result($data = array())
+    static function send_result($data = array())
     {
         $obj = array();
         $obj['err_code'] = 0;
