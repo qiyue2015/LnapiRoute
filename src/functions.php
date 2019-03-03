@@ -9,6 +9,7 @@
 namespace LnapiRoute;
 
 use FastRoute;
+use LnapiRoute\Result;
 
 function Routing($routeDefinitionCallback, array $options = [])
 {
@@ -28,12 +29,12 @@ function Routing($routeDefinitionCallback, array $options = [])
     switch ($routeInfo[0]) {
         case FastRoute\Dispatcher::NOT_FOUND:
             // ... 404 Not Found 没找到对应的方法
-            send_error(404, 'Not Found 没找到对应的方法');
+            Result::send_error(404, 'Not Found 没找到对应的方法');
             break;
         case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
             $allowedMethods = $routeInfo[1];
             // ... 405 Method Not Allowed  方法不允许
-            send_error(405, 'Method Not Allowed  方法不允许');
+            Result::send_error(405, $allowedMethods . ' Method Not Allowed 方法不允许');
             break;
         case FastRoute\Dispatcher::FOUND: // 找到对应的方法
 
@@ -56,19 +57,21 @@ function Routing($routeDefinitionCallback, array $options = [])
             }
             $fileName = $filePath . '/api/' . $parts[0] . '/' . $segments[0] . '.php';
             if (!file_exists($fileName)) {
-                send_error(404, 'Not Found 没找到对应的方法文件：' . $segments[0]);
+                Result::send_error(404, 'Not Found 没找到对应的方法文件：' . $segments[0]);
             } else {
                 require_once $fileName;
             }
+
             // Instanitate controller
             $controller = new $segments[0]();
             $ret = call_user_func_array(array($controller, $segments[1]), array($vars));
             if (is_error($ret)) {
-                send_error($ret['errno'], $ret['message']);
+                Result::send_error($ret['errno'], $ret['message']);
+            } elseif (array_key_exists('errno', $ret)) {
+                Result::send_result($ret['message']);
             } else {
-                send_result($ret);
+                Result::send_result($ret);
             }
-
             break;
     }
 }
@@ -80,33 +83,4 @@ function is_error($data)
     } else {
         return true;
     }
-}
-
-function send_error($number, $msg)
-{
-    global $_GPC;
-    $obj = array();
-    $obj['err_code'] = intval($number);
-    $obj['err_msg'] = $msg;
-    header('Content-type: application/json');
-    $obj = json_encode($obj, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-    if ($_GPC['jsonpCallback']) {
-        $obj = $_GPC['jsonpCallback'] . '(' . $obj . ')';
-    }
-    die($obj);
-}
-
-function send_result($data = array())
-{
-    global $_GPC;
-    $obj = array();
-    $obj['err_code'] = 0;
-    $obj['err_msg'] = 'success';
-    $obj['data'] = $data ? $data : (Object)array();
-    header('Content-type: application/json');
-    $obj = json_encode($obj, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-    if ($_GPC['jsonpCallback']) {
-        $obj = $_GPC['jsonpCallback'] . '(' . $obj . ')';
-    }
-    die($obj);
 }
