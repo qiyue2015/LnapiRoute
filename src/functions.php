@@ -41,26 +41,28 @@ function Routing($routeDefinitionCallback, array $options = [])
             $handler = $routeInfo[1];
             $vars = $routeInfo[2]; // 获取请求参数
 
-            // Grab all parts based on a / separator
-            $parts = explode('/', $handler);
+            $segments = explode('@', $handler);
 
-            // Collect the last index of the array
-            $last = end($parts);
+//            // Grab all parts based on a / separator
+//            $parts = explode('/', $handler);
+//
+//            // Collect the last index of the array
+//            $last = end($parts);
+//
+//            // Grab the controller name and method call
+//            $segments = explode('@', $last);
 
-            // Grab the controller name and method call
-            $segments = explode('@', $last);
-
-            if ($options['API_PATH']) {
-                $filePath = $options['API_PATH'];
-            } else {
-                $filePath = str_replace("\\", '/', dirname(dirname(__FILE__)));
-            }
-            $fileName = $filePath . '/api/' . $parts[0] . '/' . $segments[0] . '.php';
-            if (!file_exists($fileName)) {
-                Result::send_error(404, 'Not Found 没找到对应的方法文件：' . $segments[0]);
-            } else {
-                require_once $fileName;
-            }
+//            if ($options['API_PATH']) {
+//                $filePath = $options['API_PATH'];
+//            } else {
+//                $filePath = str_replace("\\", '/', dirname(dirname(__FILE__)));
+//            }
+//            $fileName = $filePath . '/api/' . $parts[0] . '/' . $segments[0] . '.php';
+//            if (!file_exists($fileName)) {
+//                Result::send_error(404, 'Not Found 没找到对应的方法文件：' . $segments[0]);
+//            } else {
+//                require_once $fileName;
+//            }
 
             // Instanitate controller
             $controller = new $segments[0]();

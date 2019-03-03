@@ -8,9 +8,9 @@ To install with composer:
     
 ## Usage 
 
-    require './vendor/autoload.php';
+    require './../vendor/autoload.php';
     
+    require './class/bootstrap.php';
     LnapiRoute\Routing(function ($r) {
-        $r->get('/users', 'web/user@userList');
-        $r->get('/user/{uid:\d+}', 'web/user@userinfo');
-    }, ['API_PATH' => 'API文件目录']);
+        $r->get('/users', 'VoteMoel\Topic@List');
+    });
